@@ -37,4 +37,9 @@ public class ServiciosController {
             @RequestBody @Valid DatosActualizarServicios datos) {
             servicioService.actualizarServicio(datos);
     }
+
+    @DeleteMapping("/{id}")
+    public void eliminarServicio(@PathVariable Long id) {
+        servicioService.eliminarServicio(id);
+    }
 }

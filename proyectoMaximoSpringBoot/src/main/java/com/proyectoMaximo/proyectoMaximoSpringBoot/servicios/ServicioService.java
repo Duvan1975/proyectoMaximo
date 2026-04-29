@@ -40,4 +40,8 @@ public class ServicioService {
         if (datos.nivelTension() != null) servicio.setNivelTension(datos.nivelTension());
         if (datos.descripcion() != null) servicio.setDescripcion(datos.descripcion());
     }
+
+    public void eliminarServicio(Long id) {
+        servicioRepository.deleteById(id);
+    }
 }
