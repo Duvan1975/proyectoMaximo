@@ -1,4 +1,4 @@
-package com.proyectoMaximo.proyectoMaximoSpringBoot.sercivios;
+package com.proyectoMaximo.proyectoMaximoSpringBoot.servicios;
 
 import jakarta.validation.constraints.NotNull;
 
