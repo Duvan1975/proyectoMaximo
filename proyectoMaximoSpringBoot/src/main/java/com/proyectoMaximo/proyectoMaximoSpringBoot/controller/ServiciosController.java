@@ -5,7 +5,10 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -21,9 +24,11 @@ public class ServiciosController {
     }
 
     @PostMapping
-    public void registrarServicio(@RequestBody @Valid DatosRegistroServicios datos) {
-        System.out.println(datos);
-        servicioService.registrarServicio(datos);
+    public ResponseEntity<DatosRespuestaServicio> registrarServicio(
+            @RequestBody @Valid DatosRegistroServicios datos,
+            UriComponentsBuilder uriComponentsBuilder) {
+
+        return servicioService.registrarServicio(datos, uriComponentsBuilder);
     }
 
     @GetMapping
@@ -33,13 +38,15 @@ public class ServiciosController {
     }
 
     @PutMapping
-    public void actualizarServicio(
+    public ResponseEntity<DatosRespuestaServicio> actualizarServicio(
             @RequestBody @Valid DatosActualizarServicios datos) {
-            servicioService.actualizarServicio(datos);
+            return servicioService.actualizarServicio(datos);
     }
 
     @DeleteMapping("/{id}")
-    public void eliminarServicio(@PathVariable Long id) {
+    public ResponseEntity<?> eliminarServicio(@PathVariable Long id) {
         servicioService.eliminarServicio(id);
+
+        return ResponseEntity.noContent().build(); //Nos devuelve un 204 No Content
     }
 }

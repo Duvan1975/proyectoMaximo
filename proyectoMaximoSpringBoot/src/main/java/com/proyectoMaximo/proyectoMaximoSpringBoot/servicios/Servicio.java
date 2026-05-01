@@ -128,4 +128,7 @@ public class Servicio {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+    public void actualizarDatos(DatosActualizarServicios datos) {
+    }
 }
