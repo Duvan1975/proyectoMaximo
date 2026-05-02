@@ -2,13 +2,19 @@ package com.proyectoMaximo.proyectoMaximoSpringBoot.servicios;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -89,10 +95,45 @@ public class ServicioService {
 
     }
 
-    /*public ResponseEntity eliminarServicio(Long id) {
-        servicioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
+    public void cargarExcel(MultipartFile archivo) {
+        try (Workbook workbook = new XSSFWorkbook(archivo.getInputStream())) {
 
-        return ResponseEntity.noContent().build();
-    }*/
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) continue; // saltar encabezado
+
+                //Validamos cada celda si vienen vacías que continue
+                if (row.getCell(7) == null) continue;
+                if (row.getCell(0) == null) continue;
+                if (row.getCell(1) == null) continue;
+                if (row.getCell(2) == null) continue;
+                if (row.getCell(3) == null) continue;
+                if (row.getCell(4) == null) continue;
+                if (row.getCell(5) == null) continue;
+                if (row.getCell(6) == null) continue;
+                if (row.getCell(8) == null) continue;
+
+                DatosRegistroServicios datos = new DatosRegistroServicios(
+                        (long) row.getCell(7).getNumericCellValue(),
+                        (int) row.getCell(0).getNumericCellValue(),
+                        (int) row.getCell(1).getNumericCellValue(),
+                        row.getCell(2).getStringCellValue(),
+                        row.getCell(3).getStringCellValue(),
+                        row.getCell(4).getStringCellValue(),
+                        BigDecimal.valueOf(row.getCell(5).getNumericCellValue()),
+                        (int) row.getCell(6).getNumericCellValue(),
+                        row.getCell(8).getStringCellValue()
+                );
+
+                if (!servicioRepository.existsByCodigoServicio(datos.codigoServicio())) {
+                    servicioRepository.save(new Servicio(datos));
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error al procesar el Excel: " + e.getMessage());
+        }
+    }
 }

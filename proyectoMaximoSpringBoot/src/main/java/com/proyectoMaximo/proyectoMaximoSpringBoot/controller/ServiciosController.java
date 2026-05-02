@@ -7,10 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponents;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/servicios")
@@ -48,5 +46,12 @@ public class ServiciosController {
         servicioService.eliminarServicio(id);
 
         return ResponseEntity.noContent().build(); //Nos devuelve un 204 No Content
+    }
+
+    @PostMapping("/cargar-excel")
+    public ResponseEntity<String> cargarExcel(
+            @RequestParam("archivo")MultipartFile archivo) {
+        servicioService.cargarExcel(archivo);
+        return ResponseEntity.ok("Archivo procesado correctamente");
     }
 }
