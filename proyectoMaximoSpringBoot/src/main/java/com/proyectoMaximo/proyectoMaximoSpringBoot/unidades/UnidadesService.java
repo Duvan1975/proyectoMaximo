@@ -118,6 +118,8 @@ public class UnidadesService {
                         row.getCell(8).getStringCellValue()
                 );
                 unidadesRepository.save(new Unidades(datos));
+                System.out.println("Insertando fila: " + row.getRowNum());
+
             }
         } catch (Exception e) {
             e.printStackTrace();
