@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -22,9 +24,11 @@ public class UnidadesController {
     }
 
     @PostMapping
-    public void registrarUnidades(@RequestBody @Valid DatosRegistroUnidades datos) {
-        System.out.println("El request llego correctamente");
-        unidadesService.registrarUnidades(datos);
+    public ResponseEntity<DatosRespuestaUnidades> registrarUnidades(
+            @RequestBody @Valid DatosRegistroUnidades datos,
+            UriComponentsBuilder uriComponentsBuilder) {
+
+        return unidadesService.registrarUnidades(datos, uriComponentsBuilder);
     }
 
     @GetMapping
@@ -34,9 +38,9 @@ public class UnidadesController {
     }
 
     @PutMapping
-    public void actualizarUnidades(
+    public ResponseEntity<DatosRespuestaUnidades> actualizarUnidades(
             @RequestBody @Valid DatosActualizarUnidades datos) {
-        unidadesService.actualizarUnidades(datos);
+        return unidadesService.actualizarUnidades(datos);
     }
 
     @DeleteMapping("/{id}")
@@ -44,5 +48,12 @@ public class UnidadesController {
         unidadesService.eliminarUnidades(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/cargar-excel")
+    public ResponseEntity<String> cargarExcel(
+            @RequestParam("archivo")MultipartFile archivo) {
+        unidadesService.cargarExcel(archivo);
+        return ResponseEntity.ok("Archivo procesado correctamente");
     }
 }

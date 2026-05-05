@@ -119,4 +119,8 @@ public class Unidades {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+
+    public void actualizarDatos(DatosActualizarUnidades datos) {
+
+    }
 }
