@@ -92,7 +92,6 @@ public class ServicioService {
             throw new EntityNotFoundException("Servicio no encontrado con el id: " + id);
         }
         servicioRepository.deleteById(id);
-
     }
 
     public void cargarExcel(MultipartFile archivo) {

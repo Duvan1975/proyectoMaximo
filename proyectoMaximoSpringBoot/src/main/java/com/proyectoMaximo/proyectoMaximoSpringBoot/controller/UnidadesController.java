@@ -1,13 +1,11 @@
 package com.proyectoMaximo.proyectoMaximoSpringBoot.controller;
 
-import com.proyectoMaximo.proyectoMaximoSpringBoot.unidades.DatosListadoUnidades;
-import com.proyectoMaximo.proyectoMaximoSpringBoot.unidades.DatosRegistroUnidades;
-import com.proyectoMaximo.proyectoMaximoSpringBoot.unidades.Unidades;
-import com.proyectoMaximo.proyectoMaximoSpringBoot.unidades.UnidadesService;
+import com.proyectoMaximo.proyectoMaximoSpringBoot.unidades.*;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,5 +31,18 @@ public class UnidadesController {
     public Page<DatosListadoUnidades> listadoUnidades(
             @PageableDefault(size = 10, sort = "uc")Pageable paginacion) {
         return unidadesService.listarUnidades(paginacion);
+    }
+
+    @PutMapping
+    public void actualizarUnidades(
+            @RequestBody @Valid DatosActualizarUnidades datos) {
+        unidadesService.actualizarUnidades(datos);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarUnidad(@PathVariable Long id) {
+        unidadesService.eliminarUnidades(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
