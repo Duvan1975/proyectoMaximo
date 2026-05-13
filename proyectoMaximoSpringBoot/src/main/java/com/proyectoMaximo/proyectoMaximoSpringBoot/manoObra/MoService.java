@@ -1,6 +1,7 @@
 package com.proyectoMaximo.proyectoMaximoSpringBoot.manoObra;
 
 import com.proyectoMaximo.proyectoMaximoSpringBoot.configuracion.ConfiguracionActa;
+import com.proyectoMaximo.proyectoMaximoSpringBoot.unidades.CoincidenciaUnidadDTO;
 import com.proyectoMaximo.proyectoMaximoSpringBoot.unidades.Unidades;
 import com.proyectoMaximo.proyectoMaximoSpringBoot.unidades.UnidadesRepository;
 import org.apache.poi.ss.usermodel.*;
@@ -105,12 +106,7 @@ public class MoService {
 
             // filtro de seguridad
             if (detalle == null || detalle.isBlank()) continue;
-            lista.add(new MoRegistroDTO(
-                    estructura,
-                    detalle,
-                    cant,
-                    nivelTension
-            ));
+
 
             // dentro del for, después de extraerFiltro
             String filtro = extraerFiltro(detalle);
@@ -118,19 +114,35 @@ public class MoService {
 
             System.out.println("Buscando: " + filtroNormalizado);
 
-            List<Unidades> resultados = unidadesRepository.findByDescripcionContainingIgnoreCase(filtroNormalizado);
+            List<Unidades> resultados =
+                    unidadesRepository.findByDescripcionContainingIgnoreCase(filtroNormalizado);
 
             if (resultados.isEmpty() && !filtro.equals(filtroNormalizado)) {
                 // Si con normalizado no encuentra, intenta con el original
                 resultados = unidadesRepository.findByDescripcionContainingIgnoreCase(filtro);
             }
 
+            List<CoincidenciaUnidadDTO> coincidencias = resultados.stream()
+                            .map(u -> new CoincidenciaUnidadDTO(
+                                    u.getId(),
+                                    u.getUc(),
+                                    u.getDescripcion()
+                            ))
+                            .toList();
+
+            lista.add(new MoRegistroDTO(
+                    estructura,
+                    detalle,
+                    cant,
+                    nivelTension,
+                    coincidencias
+            ));
+
             System.out.println("Coincidencias: " + resultados.size());
 
             for (Unidades u : resultados) {
                 System.out.println("  -> " + u.getDescripcion());
             }
-
         }
 
         workbook.close();
