@@ -158,6 +158,9 @@ public class UniserviciosService {
             Set<Integer> codigosUnicos =
                     new HashSet<>();
 
+            Map<Integer, Integer> cantidadRegistros =
+                    new HashMap<>();
+
             for (int i = 1;
                  i <= sheet.getLastRowNum();
                  i++) {
@@ -201,6 +204,40 @@ public class UniserviciosService {
                     if (codigo != null && codigo > 0) {
 
                         codigosUnicos.add(codigo);
+
+                        int contador = 0;
+
+                        for (int c = columnaServicio + 1;
+                        c < row.getLastCellNum();
+                        c++) {
+
+                            Cell celdaValor = row.getCell(c);
+
+                            if (celdaValor == null) continue;
+
+                            try {
+                                if (celdaValor.getCellType()
+                                == CellType.NUMERIC) {
+
+                                    double valor =
+                                            celdaValor
+                                                    .getNumericCellValue();
+                                    if (valor > 0) {
+                                        contador++;
+                                    }
+                                }
+                            } catch (Exception e) {
+                                System.out.println(
+                                        "Error leyendo valores filas: "
+                                        + i
+                                );
+                            }
+                        }
+                        cantidadRegistros.merge(
+                                codigo,
+                                contador,
+                                Integer::sum
+                        );
                     }
 
                 } catch (Exception e) {
@@ -240,6 +277,10 @@ public class UniserviciosService {
                     .map(entry ->
                             new ResultadoBusquedaServicio(
                                     entry.getKey(),
+                                    cantidadRegistros.getOrDefault(
+                                            entry.getKey(),
+                                            0
+                                    ),
                                     entry.getValue()
                             )
                     )
