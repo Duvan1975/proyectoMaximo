@@ -30,8 +30,18 @@ public class UniserviciosController {
 
     @GetMapping
     public Page<DatosListadoUniservicios> listadoUniservicios(
-            @PageableDefault(size = 10, sort = "estructura")Pageable paginacion) {
+            @PageableDefault(size = 20, sort = "codigoServicio")Pageable paginacion) {
         return uniserviciosService.listadoUniservicios(paginacion);
+    }
+
+    @GetMapping("/buscar")
+    public Page<DatosListadoUniservicios> buscarPorCodigoServicio(
+            @RequestParam String codigoServicio,
+            @PageableDefault(size = 10, sort = "estructura")
+            Pageable paginacion) {
+
+        return uniserviciosService.buscarPorCodigoServicio(
+                codigoServicio, paginacion);
     }
 
     @PutMapping

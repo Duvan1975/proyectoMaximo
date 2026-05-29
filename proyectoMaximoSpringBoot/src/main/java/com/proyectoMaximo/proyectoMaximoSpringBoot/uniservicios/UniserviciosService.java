@@ -30,6 +30,15 @@ public class UniserviciosService {
                 .map(DatosListadoUniservicios::new);
     }
 
+    public Page<DatosListadoUniservicios> buscarPorCodigoServicio(
+            String codigoServicio,
+            Pageable paginacion) {
+
+        return uniserviciosRepository
+                .findByCodigoServicio(codigoServicio, paginacion)
+                .map(DatosListadoUniservicios::new);
+    }
+
     @Transactional
     public ResponseEntity actualizarUniservicios(DatosActualizarUniservicios datos) {
         Uniservicios uniservicios = uniserviciosRepository.getReferenceById(datos.id());
