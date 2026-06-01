@@ -103,8 +103,8 @@ public class UniserviciosService {
 
             if (sheet == null) {
 
-                throw new RuntimeException(
-                        "No se encontró la hoja TRABAJOS"
+                throw new ArchivoInvalidoException(
+                        "El archivo no contiene la hoja TRABAJOS"
                 );
             }
 
@@ -154,8 +154,8 @@ public class UniserviciosService {
 
             if (columnaServicio == null) {
 
-                throw new RuntimeException(
-                        "No se encontró la columna Servicio"
+                throw new ArchivoInvalidoException(
+                        "En el Acta, no se encontró la columna Servicio"
                 );
             }
 
@@ -295,8 +295,12 @@ public class UniserviciosService {
                     )
 
                     .toList();
+        }
+        catch (ArchivoInvalidoException e) {
+            throw e;
+        }
 
-        } catch (Exception e) {
+        catch (Exception e) {
 
             e.printStackTrace();
 
@@ -304,6 +308,13 @@ public class UniserviciosService {
                     "Error procesando archivo: "
                             + e.getMessage()
             );
+        }
+    }
+
+    public class ArchivoInvalidoException extends RuntimeException {
+
+        public ArchivoInvalidoException(String mensaje) {
+            super(mensaje);
         }
     }
 }

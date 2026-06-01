@@ -65,16 +65,23 @@ public class UniserviciosController {
     }
 
     @PostMapping("/buscar-acta")
-    public ResponseEntity<List<ResultadoBusquedaServicio>>
+    public ResponseEntity<?>
     buscarActa(
 
             @RequestParam("archivo")
             MultipartFile archivo
     ) {
 
-        return ResponseEntity.ok(
-                uniserviciosService
-                        .buscarServiciosActa(archivo)
-        );
+        try {
+            return ResponseEntity.ok(
+                    uniserviciosService
+                            .buscarServiciosActa(archivo)
+            );
+        } catch (UniserviciosService.ArchivoInvalidoException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
     }
 }
