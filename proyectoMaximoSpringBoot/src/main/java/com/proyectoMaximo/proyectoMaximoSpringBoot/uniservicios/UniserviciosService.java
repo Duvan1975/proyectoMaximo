@@ -109,6 +109,7 @@ public class UniserviciosService {
             }
 
             Integer columnaServicio = null;
+            Integer columnaDescripcion = null;
             Integer filaEncabezado = null;
 
             for (int i = 0; i <= sheet.getLastRowNum(); i++) {
@@ -134,7 +135,11 @@ public class UniserviciosService {
 
                                 filaEncabezado = i;
 
-                                break;
+                            }
+                            if (valor.equalsIgnoreCase("DESCRIPCION")) {
+
+                                columnaDescripcion =
+                                        cell.getColumnIndex();
                             }
                         }
 
@@ -147,7 +152,8 @@ public class UniserviciosService {
                     }
                 }
 
-                if (columnaServicio != null) {
+                if (columnaServicio != null
+                        && columnaDescripcion != null) {
                     break;
                 }
             }
@@ -156,6 +162,13 @@ public class UniserviciosService {
 
                 throw new ArchivoInvalidoException(
                         "En el Acta, no se encontró la columna Servicio"
+                );
+            }
+
+            if (columnaDescripcion == null) {
+
+                throw new ArchivoInvalidoException(
+                        "En el acta, no se encontró la columna Descripción"
                 );
             }
 
@@ -216,7 +229,7 @@ public class UniserviciosService {
 
                         int contador = 0;
 
-                        for (int c = columnaServicio + 1;
+                        for (int c = columnaDescripcion + 1;
                         c < row.getLastCellNum();
                         c++) {
 
